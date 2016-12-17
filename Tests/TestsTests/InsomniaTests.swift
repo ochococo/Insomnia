@@ -25,13 +25,12 @@
 
 import Foundation
 
-
 import XCTest
-@testable import Stamp
+@testable import Tests
 
 final class DeviceMock : UIDevice {
 
-    var mock_batteryState: UIDeviceBatteryState = .Unknown
+    var mock_batteryState: UIDeviceBatteryState = .unknown
 
     override var batteryState: UIDeviceBatteryState {
         get { return mock_batteryState }
@@ -47,12 +46,12 @@ final class InsomniaTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        insomnia = Insomnia(mode: .WhenCharging, device: device)
+        insomnia = Insomnia(mode: .whenCharging, device: device)
     }
 
     func testNotifiedAboutBatteryStateChangeCharging() {
 
-        device.mock_batteryState = .Charging
+        device.mock_batteryState = .charging
 
         insomnia.batteryStateHandler = { isPlugged in
             XCTAssertTrue(isPlugged)
@@ -61,7 +60,7 @@ final class InsomniaTests: XCTestCase {
 
     func testNotifiedAboutBatteryStateChangeFull() {
 
-        device.mock_batteryState = .Full
+        device.mock_batteryState = .full
 
         insomnia.batteryStateHandler = { isPlugged in
             XCTAssertTrue(isPlugged)
@@ -70,7 +69,7 @@ final class InsomniaTests: XCTestCase {
 
     func testNotifiedAboutBatteryStateChangeUnknown() {
 
-        device.mock_batteryState = .Unknown
+        device.mock_batteryState = .unknown
 
         insomnia.batteryStateHandler = { isPlugged in
             XCTAssertFalse(isPlugged)
@@ -79,7 +78,7 @@ final class InsomniaTests: XCTestCase {
 
     func testNotifiedAboutBatteryStateChangeUnplugged() {
 
-        device.mock_batteryState = .Unplugged
+        device.mock_batteryState = .unplugged
 
         insomnia.batteryStateHandler = { isPlugged in
             XCTAssertFalse(isPlugged)
@@ -88,7 +87,7 @@ final class InsomniaTests: XCTestCase {
 
     func testNotifiedAboutBatteryStateChangeAfterNotification() {
 
-        device.mock_batteryState = .Charging
+        device.mock_batteryState = .charging
 
         var batteryIsPlugged = true
 
@@ -96,55 +95,64 @@ final class InsomniaTests: XCTestCase {
             batteryIsPlugged = isPlugged
         }
 
-        device.mock_batteryState = .Unplugged
+        device.mock_batteryState = .unplugged
 
-        let notification = NSNotification(name: UIDeviceBatteryStateDidChangeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        NotificationCenter.default.post(notification)
 
         XCTAssertFalse(batteryIsPlugged)
     }
 
     func testDidSetInsomniaModeToDisabledAfterNotificationAboutUnplugged() {
 
-        device.mock_batteryState = .Unplugged
+        device.mock_batteryState = .unplugged
 
-        let notification = NSNotification(name: UIDeviceBatteryStateDidChangeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        NotificationCenter.default.post(notification)
 
-        XCTAssertFalse(UIApplication.sharedApplication().idleTimerDisabled)
+        XCTAssertFalse(UIApplication.shared.isIdleTimerDisabled)
     }
 
     func testDidSetInsomniaModeToEnabledAfterNotificationAboutCharging() {
 
-        device.mock_batteryState = .Charging
+        device.mock_batteryState = .charging
 
-        let notification = NSNotification(name: UIDeviceBatteryStateDidChangeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        NotificationCenter.default.post(notification)
 
-        XCTAssertTrue(UIApplication.sharedApplication().idleTimerDisabled)
+        XCTAssertTrue(UIApplication.shared.isIdleTimerDisabled)
     }
 
     func testDidSetInsomniaModeToEnabledInAlwaysModeAfterNotificationAboutUnplugged() {
 
-        insomnia.mode = .Always
+        insomnia.mode = .always
 
-        device.mock_batteryState = .Unplugged
+        device.mock_batteryState = .unplugged
 
-        let notification = NSNotification(name: UIDeviceBatteryStateDidChangeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        NotificationCenter.default.post(notification)
 
-        XCTAssertTrue(UIApplication.sharedApplication().idleTimerDisabled)
+        XCTAssertTrue(UIApplication.shared.isIdleTimerDisabled)
     }
 
     func testDidSetInsomniaModeToDisabledInDisabledModeAfterNotificationAboutCharging() {
 
-        insomnia.mode = .Disabled
+        insomnia.mode = .disabled
 
-        device.mock_batteryState = .Charging
+        device.mock_batteryState = .charging
 
-        let notification = NSNotification(name: UIDeviceBatteryStateDidChangeNotification, object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        NotificationCenter.default.post(notification)
 
-        XCTAssertFalse(UIApplication.sharedApplication().idleTimerDisabled)
+        XCTAssertFalse(UIApplication.shared.isIdleTimerDisabled)
+    }
+
+    func testDidInsomniaClearedTheTimerPropertyAfterDeinitialization() {
+
+        insomnia.mode = .always
+
+        insomnia = nil
+
+        XCTAssertFalse(UIApplication.shared.isIdleTimerDisabled)
     }
 }

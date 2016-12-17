@@ -24,21 +24,53 @@
 
 import UIKit
 
+/**
+
+ Insomnia modes:
+ 
+ - `disabled`: Nothing will change (disabled functionality).
+ - `always`: Your iOS device will never timeout and lock.
+ - `whenCharging`: Device will stay active as long as it's connected to charger.
+
+ */
 public enum InsomniaMode {
     case disabled
     case always
     case whenCharging
 }
 
-public protocol BatteryStateReporting : class {
+public protocol BatteryStateReporting: class {
     var batteryStateHandler: ((_ isPlugged: Bool) -> Void)? { get set }
 }
 
-public final class Insomnia : BatteryStateReporting {
+public protocol InsomniaModeHaving {
+    var mode: InsomniaMode { get set }
+}
 
+public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
+
+    /**
+         This mode will change the behavior:
+         
+         - `disabled`: Nothing will change (disabled functionality).
+         - `always`: Your iOS device will never timeout and lock.
+         - `whenCharging`: Device will stay active as long as it's connected to charger.
+
+     */
     public var mode: InsomniaMode {
         didSet {
             updateInsomniaMode()
+        }
+    }
+
+    /**
+     
+        You can set this closure to be notified when your device is being plugged/unplugged from charger.
+     
+     */
+    public var batteryStateHandler: ((_ isPlugged: Bool) -> Void)? {
+        didSet {
+            notifyAboutCurrentBatteryState()
         }
     }
 
@@ -46,16 +78,21 @@ public final class Insomnia : BatteryStateReporting {
     private unowned let notificationCenter: NotificationCenter
     private unowned let application: UIApplication
 
-    public var batteryStateHandler: ((_ isPlugged: Bool) -> Void)? {
-        didSet {
-            notifyAboutCurrentBatteryState()
-        }
-    }
+    /**
 
+         Initializes a new Insomnia instance.
+
+         - parameters:
+             - mode: Mode determines behaviour (see InsomniaMode enum).
+             - device: UIDevice
+             - notificationCenter: NotificationCenter
+             - application: UIApplication
+
+     */
     public init(mode: InsomniaMode,
-         device: UIDevice = UIDevice.current,
-         notificationCenter: NotificationCenter = NotificationCenter.default,
-         application: UIApplication = UIApplication.shared) {
+                device: UIDevice = UIDevice.current,
+                notificationCenter: NotificationCenter = NotificationCenter.default,
+                application: UIApplication = UIApplication.shared) {
         self.device = device
         self.mode = mode
         self.notificationCenter = notificationCenter
