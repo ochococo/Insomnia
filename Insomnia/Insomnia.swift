@@ -34,19 +34,54 @@ import UIKit
 
  */
 public enum InsomniaMode {
+    /** 
+    Nothing will change (disabled functionality).
+     */
     case disabled
+    /**
+    Your iOS device will never timeout and lock.
+     */
     case always
+    /**
+    Device will stay active as long as it's connected to charger.
+     */
     case whenCharging
 }
 
+/**
+ This protocol describes ability to set `batteryStateHandler` and be notified about battery state changes.
+ */
 public protocol BatteryStateReporting: class {
+    /**
+     You can set this closure to be notified when your device is being plugged/unplugged from charger.
+     */
     var batteryStateHandler: ((_ isPlugged: Bool) -> Void)? { get set }
 }
 
 public protocol InsomniaModeHaving {
+    /**
+     This mode will change the behavior:
+
+     - `disabled`: Nothing will change (disabled functionality).
+     - `always`: Your iOS device will never timeout and lock.
+     - `whenCharging`: Device will stay active as long as it's connected to charger.
+
+     */
     var mode: InsomniaMode { get set }
 }
 
+/**
+
+    Sometimes you want your iPhone to stay active a little bit longer is it an import or just game interface.
+
+    This simple class aims to simplify the code and give you a well tested solution.
+ 
+    Main functionalities:
+    * always prevent iOS device from timeout and lock
+    * prevent only when charging
+    * notify about battery state (`isPlugged`)
+
+ */
 public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
 
     /**
@@ -64,9 +99,7 @@ public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
     }
 
     /**
-     
-        You can set this closure to be notified when your device is being plugged/unplugged from charger.
-     
+    You can set this closure to be notified when your device is being plugged/unplugged from charger.
      */
     public var batteryStateHandler: ((_ isPlugged: Bool) -> Void)? {
         didSet {
