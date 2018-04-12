@@ -1,3 +1,4 @@
 .DS_Store
 xcuserdata/*
 UserInterfaceState.xcuserstate
+/Tests/Tests.xcodeproj/xcuserdata/
