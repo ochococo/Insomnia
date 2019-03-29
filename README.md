@@ -3,7 +3,7 @@
 
 ![Insomnia Logo](Insomnia.jpg)
 
-![Swift4.1](https://img.shields.io/badge/%20in-swift%204.1-orange.svg)
+![Swift4.1](https://img.shields.io/badge/%20in-swift%205.0-orange.svg)
 ![Coverage 100%](https://img.shields.io/badge/coverage-100%25-green.svg)
 [![Version](https://img.shields.io/cocoapods/v/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
 [![License](https://img.shields.io/cocoapods/l/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
