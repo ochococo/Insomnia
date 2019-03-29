@@ -1,7 +1,7 @@
 //
 //    The MIT License (MIT)
 //
-//    Copyright (c) 2016-2018 Oktawian Chojnacki
+//    Copyright (c) 2016-2019 Oktawian Chojnacki
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -75,11 +75,6 @@ public protocol InsomniaModeHaving {
     Sometimes you want your iPhone to stay active a little bit longer is it an import or just game interface.
 
     This simple class aims to simplify the code and give you a well tested solution.
- 
-    Main functionalities:
-    * always prevent iOS device from timeout and lock
-    * prevent only when charging
-    * notify about battery state (`isPlugged`)
 
  */
 public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
@@ -130,15 +125,19 @@ public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
         self.mode = mode
         self.notificationCenter = notificationCenter
         self.application = application
-        startMonitoring()
+        updateInsomniaMode()
     }
 
     private func startMonitoring() {
         device.isBatteryMonitoringEnabled = true
         notificationCenter.addObserver(self,
                                        selector: #selector(batteryStateDidChange),
-                                       name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
-        updateInsomniaMode()
+                                       name: UIDevice.batteryStateDidChangeNotification, object: nil)
+    }
+
+    private func stopMonitoring() {
+        notificationCenter.removeObserver(self)
+        device.isBatteryMonitoringEnabled = false
     }
 
     @objc private func batteryStateDidChange(notification: NSNotification){
@@ -146,8 +145,18 @@ public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
     }
 
     private func updateInsomniaMode() {
-        notifyAboutCurrentBatteryState()
-        application.isIdleTimerDisabled = mode == .whenCharging ? isPlugged : (mode != .disabled)
+        switch mode {
+        case .whenCharging:
+            startMonitoring()
+            notifyAboutCurrentBatteryState()
+            application.isIdleTimerDisabled = isPlugged
+        case .always:
+            stopMonitoring()
+            application.isIdleTimerDisabled = true
+        case .disabled:
+            stopMonitoring()
+            application.isIdleTimerDisabled = false
+        }
     }
 
     private func notifyAboutCurrentBatteryState() {
@@ -164,8 +173,7 @@ public final class Insomnia: BatteryStateReporting, InsomniaModeHaving {
     }
 
     deinit {
-        notificationCenter.removeObserver(self)
-        device.isBatteryMonitoringEnabled = false
+        stopMonitoring()
         application.isIdleTimerDisabled = false
     }
 }
