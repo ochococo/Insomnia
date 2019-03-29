@@ -1,7 +1,7 @@
 //
 //    The MIT License (MIT)
 //
-//    Copyright (c) 2016 Oktawian Chojnacki
+//    Copyright (c) 2016-2019 Oktawian Chojnacki
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 //    SOFTWARE.
 //
 
-
 import Foundation
 
 import XCTest
@@ -30,9 +29,9 @@ import XCTest
 
 final class DeviceMock : UIDevice {
 
-    var mock_batteryState: UIDeviceBatteryState = .unknown
+    var mock_batteryState: UIDevice.BatteryState = .unknown
 
-    override var batteryState: UIDeviceBatteryState {
+    override var batteryState: UIDevice.BatteryState {
         get { return mock_batteryState }
         set {}
     }
@@ -97,7 +96,7 @@ final class InsomniaTests: XCTestCase {
 
         device.mock_batteryState = .unplugged
 
-        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        let notification = Notification(name: UIDevice.batteryStateDidChangeNotification, object: nil)
         NotificationCenter.default.post(notification)
 
         XCTAssertFalse(batteryIsPlugged)
@@ -107,7 +106,7 @@ final class InsomniaTests: XCTestCase {
 
         device.mock_batteryState = .unplugged
 
-        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        let notification = Notification(name: UIDevice.batteryStateDidChangeNotification, object: nil)
         NotificationCenter.default.post(notification)
 
         XCTAssertFalse(UIApplication.shared.isIdleTimerDisabled)
@@ -117,7 +116,7 @@ final class InsomniaTests: XCTestCase {
 
         device.mock_batteryState = .charging
 
-        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        let notification = Notification(name: UIDevice.batteryStateDidChangeNotification, object: nil)
         NotificationCenter.default.post(notification)
 
         XCTAssertTrue(UIApplication.shared.isIdleTimerDisabled)
@@ -129,7 +128,7 @@ final class InsomniaTests: XCTestCase {
 
         device.mock_batteryState = .unplugged
 
-        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        let notification = Notification(name: UIDevice.batteryStateDidChangeNotification, object: nil)
         NotificationCenter.default.post(notification)
 
         XCTAssertTrue(UIApplication.shared.isIdleTimerDisabled)
@@ -141,7 +140,7 @@ final class InsomniaTests: XCTestCase {
 
         device.mock_batteryState = .charging
 
-        let notification = Notification(name: NSNotification.Name.UIDeviceBatteryStateDidChange, object: nil)
+        let notification = Notification(name: UIDevice.batteryStateDidChangeNotification, object: nil)
         NotificationCenter.default.post(notification)
 
         XCTAssertFalse(UIApplication.shared.isIdleTimerDisabled)
