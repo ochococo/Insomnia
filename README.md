@@ -10,6 +10,8 @@
 [![Platform](https://img.shields.io/cocoapods/p/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
 [![Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
 
+❤️ Please consider supporting my work, [become my Sponsor!](https://github.com/sponsors/ochococo) 🙏
+
 Micro library to answer to questions like:
 
 - How to prevent screen lock on my application?
