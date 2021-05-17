@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name          = "Insomnia"
-  s.version       = "2.0.0"
+  s.version       = "2.0.1"
   s.summary       = "Small class to disable sleep timeout in iOS."
   s.description   = "Sometimes you want your iPhone to stay awake a little bit longer."
   s.homepage      = "https://github.com/ochococo/insomnia/"
