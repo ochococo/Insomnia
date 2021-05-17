@@ -9,6 +9,8 @@
 [![License](https://img.shields.io/cocoapods/l/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
 [![Platform](https://img.shields.io/cocoapods/p/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
 [![Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
+[![Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/Insomnia.svg?style=flat)](http://cocoadocs.org/docsets/Insomnia)
+[简体中文](https://github.com/CharlotteFallices/Insomnia/blob/master/README_zh.md)
 
 ❤️ Please consider supporting my work, [become my Sponsor!](https://github.com/sponsors/ochococo) 🙏
 
